@@ -1,0 +1,156 @@
+
+Energy.cpp,46
+Energy::Energy(3,23
+void Energy::plot(11,94
+
+GraphicalPrimitive.cpp,310
+#define DEBUG 2,34
+Circle2D::Circle2D(10,111
+void Circle2D::setPoint(35,807
+void Circle2D::setR(65,1520
+void Circle2D::draw(91,2106
+Line::Line(100,2354
+void Line::setP0(107,2552
+void Line::setP1(112,2620
+void Line::setP01(117,2688
+void Line::draw(124,2854
+Box::Box(131,2978
+void Box::draw(143,3224
+
+Manipulator.cpp,629
+Manipulator::Manipulator(7,102
+Manipulator::Manipulator(16,406
+void Manipulator::print_value(25,771
+VRManipulator::VRManipulator(31,901
+VRManipulator::VRManipulator(36,1027
+VRManipulator::VRManipulator(47,1389
+VRManipulator& VRManipulator::operator=(VRManipulator::operator=52,1463
+Revolute::Revolute(69,1941
+Revolute::Revolute(74,2058
+Revolute::Revolute(85,2405
+Revolute& Revolute::operator=(Revolute::operator=92,2596
+void Revolute::setEndEffector(120,3107
+Prismatic::Prismatic(132,3379
+Prismatic::Prismatic(137,3494
+Prismatic::Prismatic(148,3819
+Prismatic& Prismatic::operator=(Prismatic::operator=154,3954
+
+SinCurv.cpp,265
+SinCurv::SinCurv(9,120
+SinCurv::SinCurv(20,399
+double SinCurv::sin_th1(31,521
+double SinCurv::sin_th1v(38,667
+double SinCurv::sin_th1a(43,775
+void SinCurv::print_value(48,879
+SinCurv::SinCurv(54,1014
+SinCurv& SinCurv::operator =(SinCurv::operator =60,1198
+
+main.cpp,1666
+#define g	12,186
+#define dt	13,200
+#define Ra	14,217
+#define Im	15,232
+#define Dm	16,252
+#define Kt	17,272
+#define Kv	18,289
+#define HH	19,306
+#define RR	20,322
+#define LL	21,338
+#define L1	22,354
+#define L2	23,370
+#define L3	24,386
+#define Lg1	25,402
+#define Lg2	26,419
+#define Lg3	27,436
+#define IG1	28,453
+#define IG2	29,474
+#define m1	30,495
+#define m2	31,513
+#define m3	32,531
+#define NN	33,549
+double th1_i,36,606
+double th1_i, th1_f;36,606
+double t;38,644
+Energy e1,39,664
+Energy e1, e2,39,664
+Energy e1, e2, e3;39,664
+double Ene123;40,738
+VRManipulator v1;41,753
+Revolute r1,42,795
+Revolute r1, r2;42,795
+Prismatic r3;43,838
+SinCurv sc1,44,876
+SinCurv sc1, sc2,44,876
+SinCurv sc1, sc2, sc3;44,876
+int Mat[Mat46,943
+int Mat[20][20][20], N3;46,943
+double b1;48,992
+double b2;49,1023
+double b3;50,1051
+double Energ[Energ51,1076
+double Energ[10][10][10], enemin1,51,1076
+double Energ[10][10][10], enemin1, enemin2,51,1076
+double Energ[10][10][10], enemin1, enemin2, Enemin2[Enemin251,1076
+double Sth1[Sth152,1133
+double Sth1[20], th1[th152,1133
+double Sth1[20], th1[20], th1v[th1v52,1133
+double Sth1[20], th1[20], th1v[20], th1a[th1a52,1133
+double ts[ts53,1179
+double ts[20], Ts,53,1179
+double ts[20], Ts, t1;53,1179
+double kiza1;54,1262
+int sat[sat55,1285
+int sat[1 + 6], at[at55,1285
+int nnn;56,1312
+double tha_1,65,1459
+double tha_1, thv_1,65,1459
+double tha_1, thv_1, th_1;65,1459
+init(71,1552
+En1(93,2180
+En2(100,2281
+En3(106,2366
+main(112,2450
+sim(160,3647
+settei(222,5273
+Hikaku1(252,6103
+tansaku(275,6578
+void makeAnimetion(357,9008
+void zu(451,11845
+void repeat(456,11922
+
+Energy.hpp,53
+#define __INCLUDE_ENERGY_H__2,29
+struct Energy6,98
+
+GraphicalPrimitive.hpp,202
+#define __INCLUDE_GRAPHICALPRIMITIVE__2,39
+class GraphicalObject10,191
+  virtual ~GraphicalObject(GraphicalObject::~GraphicalObject14,266
+class Circle2D 17,301
+class Line 29,553
+class Box 43,968
+
+Manipulator.hpp,132
+#define MANIPULATOR_H2,22
+struct Manipulator12,161
+struct VRManipulator 25,634
+struct Revolute 38,953
+struct Prismatic 54,1643
+
+SinCurv.hpp,53
+#define SINCURVE_H2,19
+struct SinCurv{SinCurv7,98
+
+debug.h,393
+#define __INCLUDE_DEBUG_H__2,28
+FILE *fp_debug;fp_debug11,167
+#define dbg(13,184
+void init_debug(15,273
+void finalize_debug(20,347
+void debug_print(25,394
+FILE *fp_assert_tansaku;fp_assert_tansaku42,694
+FILE *fp_assert_time;fp_assert_time43,719
+FILE *fp_assert_repeat;fp_assert_repeat44,741
+void init_assertion(46,766
+void assert_repeat(64,1153
+void finalize_assertion(73,1429

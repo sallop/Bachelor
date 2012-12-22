@@ -1,0 +1,20 @@
+// 1. Ts -> t1 -> ts[]
+  // 2. ttf = ts[DIV] ? p
+  // 3. b1, b2, b3
+  // 4. virtual manipulator
+  // 5. real manipulator
+  // 6. start and end point{x,y,l_hypot,l_base,vth}
+  // 7. th_.s, th_.v, th_.a
+  // 8. v1.m v1.th = v1.th = th_.s, v1.l = 0.05, v1.r = v1.l/2.0;
+  // 9. v2 = v1;
+  //10. real manipulator 1, 2, 3
+  //11. fk1, fk2
+  //12. N3
+  //13. a1, a2, a3, a4
+  //14. th_i, th_f
+  //15. th1v_i, th[0] = th1_i, th1v[0] = th1v_i, th1[DIV] = th1_f, th1v[DIV] = 0.0
+  //16. nt11 = 220, nt22 = 440
+  //17. max = (int)(Ts/dt);
+  //18. Amp1, ac1, Bc1 => sc1 = new Sin_curve( ttf, );
+  //19. Sth1[n] = sc.sin_th(ts[n]);
+  //20. kiz1a, kiz2a 

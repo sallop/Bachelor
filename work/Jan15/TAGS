@@ -1,0 +1,286 @@
+
+GraphicalPrimitive.cpp,544
+#define DEBUG 2,34
+Circle2D::Circle2D(10,111
+void Circle2D::setPoint(35,833
+void Circle2D::setR(65,1585
+void Circle2D::draw(91,2198
+Circle3D::Circle3D(100,2449
+void Circle3D::setPoint(125,3214
+void Circle3D::setR(155,3981
+void Circle3D::draw(181,4594
+Line::Line(196,4934
+void Line::setP0(203,5132
+void Line::setP1(208,5200
+void Line::setP01(213,5268
+void Line::draw(220,5434
+Line3D::Line3D(227,5558
+void Line3D::setP0(234,5722
+void Line3D::setP1(239,5816
+void Line3D::draw(244,5910
+Box::Box(251,6064
+void Box::draw(263,6311
+
+variables.cpp,1927
+const double	g 4,53
+const double	dt 6,130
+const double	Ra 8,231
+const double	Im 9,255
+const double	Dm 10,284
+const double	Kt 11,313
+const double	Kv 12,339
+const double	HH 13,365
+const double	RR 14,390
+const double	LL 15,415
+const double	L1 16,440
+const double	L2 17,465
+const double	L3 18,490
+const double	Lg1 19,515
+const double	Lg2 20,540
+const double	Lg3 21,565
+const double	IG1 22,590
+const double	IG2 23,619
+const double	m1 24,648
+const double	m2 25,675
+const double	m3 26,702
+const int	NN 27,766
+const int       N3 28,819
+const double	Mf 29,875
+const int    REPEAT 31,988
+const double b1 33,1050
+const double b2 34,1105
+const double b3 35,1163
+const double height 38,1264
+const double radius 39,1294
+Point pnt_i 41,1325
+Point pnt_f 42,1404
+Point pnt_v0 43,1481
+Point pnt_r0 44,1555
+const double vth_i 46,1627
+const double vth_f 47,1695
+const double rth12 48,1763
+const double line_i_r0 49,1831
+const double line_i_v0 50,1903
+const double rth1 52,1978
+const Point pnt_r1 53,2031
+const double rth2 58,2175
+const struct Config cfg_th1 60,2243
+const struct Config cfg_th2 61,2305
+const struct Config cfg_th3 62,2365
+struct Linear_curve_t fk1,65,2440
+struct Linear_curve_t fk1,fk2;65,2440
+double a1;66,2471
+double a2;67,2482
+double a3;68,2493
+double a4;69,2504
+ScaraRobot scara;71,2516
+VRManipulator v1;73,2535
+Revolute  r1,74,2575
+Revolute  r1, r2;74,2575
+Prismatic r3 75,2617
+Energy e1;76,2656
+Energy e2;77,2667
+Energy e3;78,2678
+SinCurv sc1,80,2690
+SinCurv sc1, sc2,80,2690
+SinCurv sc1, sc2, sc3;80,2690
+double Ts;82,2735
+double t1;83,2746
+double ts[ts85,2758
+double kiza1;86,2773
+double kiza2;87,2787
+double kiza3;88,2801
+double Sth1[Sth189,2815
+double Sth2[Sth290,2832
+double Sth3[Sth391,2849
+double  th1[th192,2866
+double th1v[th1v93,2883
+double  th2[th294,2900
+double th2v[th2v95,2917
+double  th3[th396,2934
+double th3v[th3v97,2951
+
+IDP.cpp,1668
+#define LEN(30,798
+#define INITARY(31,845
+#undef DEBUG37,993
+# define debug(39,1019
+# define debug(41,1100
+IDP::IDP(45,1155
+IDP::IDP(52,1330
+IDPUP::IDPUP(136,3964
+IDPUP::~IDPUP(137,3981
+IDPUP::IDPUP(138,3999
+IDPDOWN::IDPDOWN(147,4219
+IDPDOWN::~IDPDOWN(148,4240
+IDPDOWN::IDPDOWN(149,4262
+IDPDIRECT::IDPDIRECT(157,4466
+IDPDIRECT::~IDPDIRECT(158,4491
+IDPDIRECT::IDPDIRECT(159,4517
+void IDPDIRECT::Init(180,5630
+IDP::~IDP(197,6017
+IDP::Init(203,6060
+IDP::start(226,6585
+IDP::En_sim(249,7137
+void IDP::zu(271,7606
+void IDP::zu(315,8868
+void IDP::makeGifFile(359,10158
+void IDPUP::sinc(388,10958
+void IDPDOWN::sinc(439,12368
+void IDPDIRECT::sinc(493,13995
+void IDP::repeat(560,16070
+void IDP::tansaku(583,16566
+IDP::optimal_result(611,17289
+void IDP::settei(695,19308
+void IDP::sim(747,20702
+#define SQ(750,20790
+#undef SQ820,22835
+void IDPUP::sim(823,22848
+#define SQ(826,22938
+#undef SQ889,24430
+void IDPDOWN::sim(892,24443
+#define SQ(895,24535
+#undef SQ958,26027
+void IDPDIRECT::sim(968,26388
+#define SQ(971,26482
+#undef SQ1034,28006
+double IDP::Hikaku(1037,28019
+#define DISPLAY(1073,28891
+#define ARYDISPLAY(1074,28952
+void IDP::dump(1080,29118
+#undef DISPLAY1106,29735
+#undef ARYDISPLAY1107,29750
+const Model& IDP::getState(1109,29769
+double IDPUP::En(1115,29828
+double IDPDOWN::En(1135,30313
+double IDPDIRECT::det(1156,30809
+double IDPDIRECT::En(1161,30912
+#define WATT(1233,33466
+#undef WATT1240,33677
+IDP::set_position(1248,33847
+IDPUP::set_position(1251,33875
+IDPDOWN::set_position(1262,34102
+IDPDIRECT::set_position(1273,34331
+Model::Model(1289,34728
+Model::Model(1290,34745
+Model::~Model(1298,34946
+
+Energy.cpp,46
+Energy::Energy(4,42
+void Energy::plot(7,106
+
+main.cpp,980
+int plot_flags[plot_flags22,398
+double th1_i,24,421
+double th1_i, th1_f,24,421
+double th1_i, th1_f, th1v_i,24,421
+double th1_i, th1_f, th1v_i, th1v_f,24,421
+double th1_i, th1_f, th1v_i, th1v_f, th1a_i,24,421
+double th1_i, th1_f, th1v_i, th1v_f, th1a_i, th1a_f;24,421
+double th2_i,25,474
+double th2_i, th2_f,25,474
+double th2_i, th2_f, th2v_i,25,474
+double th2_i, th2_f, th2v_i, th2v_f,25,474
+double th2_i, th2_f, th2v_i, th2v_f, th2a_i,25,474
+double th2_i, th2_f, th2v_i, th2v_f, th2a_i, th2a_f;25,474
+double th3_i,26,527
+double th3_i, th3_f,26,527
+double th3_i, th3_f, th3v_i,26,527
+double th3_i, th3_f, th3v_i, th3v_f,26,527
+double th3_i, th3_f, th3v_i, th3v_f, th3a_i,26,527
+double th3_i, th3_f, th3v_i, th3v_f, th3a_i, th3a_f;26,527
+Model model;28,581
+graph_volt_constituent(31,600
+graph_standard(39,812
+graph_volt_constituent(57,1262
+graph_standard(64,1460
+void init(73,1765
+void view_animation(173,5080
+main(218,6565
+void make_gif_file(276,7938
+
+SinCurv.cpp,181
+SinCurv::SinCurv(9,120
+SinCurv::SinCurv(20,399
+double SinCurv::sin_th1(31,521
+double SinCurv::sin_th1v(38,667
+double SinCurv::sin_th1a(43,775
+void SinCurv::print_value(48,879
+
+Manipulator.cpp,1179
+Manipulator::Manipulator(7,102
+Manipulator::Manipulator(16,417
+Manipulator::~Manipulator(30,808
+void Manipulator::print_value(35,915
+void Manipulator::setXYZ0(41,1050
+void Manipulator::setXYZ(46,1149
+VRManipulator::VRManipulator(52,1286
+VRManipulator::VRManipulator(64,1637
+VRManipulator::VRManipulator(77,2041
+void VRManipulator::setXYZ0(82,2116
+void VRManipulator::setXYZ(87,2217
+VRManipulator::~VRManipulator(110,3021
+Revolute::Revolute(116,3139
+Revolute::Revolute(121,3261
+Revolute::Revolute(133,3625
+Revolute::~Revolute(168,4601
+void Revolute::setXYZ0(173,4710
+void Revolute::setXYZ(178,4806
+void Revolute::setTHsva(186,4951
+void Revolute::setXsva(191,5039
+void Revolute::setYsva(196,5123
+void Revolute::setEndEffector(201,5207
+Prismatic::Prismatic(213,5499
+Prismatic::Prismatic(218,5618
+Prismatic::Prismatic(230,5954
+Prismatic::~Prismatic(236,6095
+double Prismatic::Thv(241,6205
+double Prismatic::Tha(242,6249
+void Prismatic::setXYZ0(266,6953
+void Prismatic::setXYZ(271,7050
+void Prismatic::setZsva(277,7151
+ScaraRobot::ScaraRobot(283,7237
+ScaraRobot:: ScaraRobot(284,7264
+ScaraRobot::ScaraRobot(288,7430
+ScaraRobot::~ScaraRobot(293,7502
+
+SinCurv.hpp,53
+#define SINCURVE_H2,19
+struct SinCurv{SinCurv7,98
+
+variables.hpp,113
+#define __INCLUDE_VARIABLES_H__2,32
+struct Point{Point6,131
+struct Config 7,178
+struct Linear_curve_t 8,244
+
+Manipulator.hpp,158
+#define MANIPULATOR_H2,22
+struct Manipulator13,183
+struct VRManipulator 29,800
+struct Revolute 48,1331
+struct Prismatic 72,2306
+class ScaraRobot93,2988
+
+Energy.hpp,53
+#define __INCLUDE_ENERGY_H__2,29
+struct Energy6,98
+
+IDP.hpp,171
+#define __INCLUDE_IDP_H__2,26
+class Model16,268
+class IDP33,531
+  enum{arysz IDP::arysz53,911
+class IDPUP 125,3047
+class IDPDIRECT 140,3313
+class IDPDOWN 186,4438
+
+GraphicalPrimitive.hpp,248
+#define __INCLUDE_GRAPHICALPRIMITIVE__2,39
+class GraphicalObject10,191
+  virtual ~GraphicalObject(GraphicalObject::~GraphicalObject14,266
+class Circle2D 17,301
+class Circle3D 29,553
+class Line 41,831
+class Line3D 55,1246
+class Box 68,1551

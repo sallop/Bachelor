@@ -1,0 +1,193 @@
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <cmath>
+#include <fenv.h>
+#include <signal.h>
+#include <errno.h>
+#include <string.h>
+#include "BallScrew.hpp"
+#include "SinCurv.hpp"
+#include "Manipulator.hpp"
+
+#define dbg()	printf("%s-%s-%d\n", __FILE__, __FUNCTION__, __LINE__)
+
+#define g	9.8
+#define dt	0.001
+#define Ra	3.5     
+#define Im	8.54e-06
+#define Dm	7.89e-05   
+#define Kt	0.046
+#define Kv	0.046
+#define HH	0.08
+#define RR	0.01 
+#define LL	0.08      
+#define L1	0.08
+#define L2	0.08
+#define L3	0.08
+#define Lg1	 0.04
+#define Lg2	 0.04
+#define Lg3	 0.04
+#define IG1	 1.73e-05   
+#define IG2	1.73e-05
+#define m1	0.0202
+#define m2	0.0202
+#define m3	0.0202
+#define NN	7		// center value
+//#define NN	3		// center value
+#define DIV	16		// division number
+
+double En_revo(Manipulator &r1, Manipulator &r2);
+
+double a1, a2, a3, a4;
+double b1, b2, b3;
+double Ene_1, Ene_2, Ene_3, Ene_123;
+double ev1, ia1, tau_1;
+double ev2, ia2, tau_2;
+double ev3, ia3, tau_3;
+
+using namespace std;
+
+void fpe_sigaction(int sigfpe, siginfo_t* siginfo, void *ucontext)
+{
+  printf("error address=%p\n", siginfo->si_addr);
+  switch(siginfo->si_code){
+  case FPE_INTDIV:
+    printf("整数の 0 による除算\n");
+    break;
+  case FPE_INTOVF:
+    printf("整数のオーバーフロー \n");
+    break;
+  case FPE_FLTDIV:
+    printf("浮動小数点の 0 による除算\n");
+    break;
+  case FPE_FLTOVF:
+    printf("浮動小数点のオーバーフロー\n");
+    break;
+  case FPE_FLTUND:
+    printf("浮動小数点のアンダーフロー\n");
+    break;
+  case FPE_FLTRES:
+    printf("浮動小数点の不正確な演算結果 (inexact result) \n");
+    break;
+  case FPE_FLTINV:
+    printf("浮動小数点の不正な操作 \n");
+    break;
+  case FPE_FLTSUB:
+    printf("範囲外の添字 (subscript) \n");
+    break;
+  default:
+    printf("??????");
+  }
+  return;
+}
+
+int main(int argc, char *argv[])
+{
+  struct sigaction sa;
+  sa.sa_flags = SA_SIGINFO|SA_RESETHAND|SA_RESTART;
+  sa.sa_sigaction = fpe_sigaction;
+  sigaction(SIGFPE, &sa, NULL);
+  feenableexcept(FE_DIVBYZERO|FE_INVALID|FE_OVERFLOW|FE_UNDERFLOW);
+  fedisableexcept(FE_INEXACT);
+  
+  double Ts = 0.64, t = 0.0;
+  ofstream ofs1("motor.dat");
+  ofstream ofs2("energy1.dat");
+  ofstream ofs3("energy2.dat");  
+  ofstream ofs4("factor1.dat");
+  ofstream ofs5("factor2.dat");
+
+  //  b1 = 1.0/0.0;
+  SinCurv sc(Ts, 0.0, 0.0618, 0.0, 0.0);
+  Manipulator r1(m1, L1), r2(m2, L2), r3(m3, L3);
+  r3.Ig = 0.0;
+  cout << " r1.Ig=" << r1.Ig
+       << " r2.Ig=" << r2.Ig
+       << " r3.Ig=" << r3.Ig
+       << endl;
+  
+  b1 = Kv + Ra*Dm/Kt; b2 = Ra*Im/Kt; b3 = Ra/Kt;
+  cout << " b1=" << b1 << " b2=" << b2 << " b3=" << b3
+       << " Ra=" << Ra << " Dm=" << Dm << " Im=" << Im
+       << " Kt=" << Kt << " Kv=" << Kv << endl;
+  //------------- Scara Robot --------------------------
+  a1 = r1.Ig + r1.m*r1.r*r1.r + r2.m*r1.l*r1.l + r3.m*r1.l*r1.l;
+  a2 = r2.Ig + r2.m*r2.r*r2.r + r3.m*r2.l*r2.l;
+  a3 = r3.Ig;
+  a4 = r2.m*r1.l*r2.r + r3.m*r1.l*r2.l;  
+  cout << " a1=" << a1 << " a2=" << a2
+       << " a3=" << a3 << " a4=" << a4
+       << endl;
+  
+  for(int i = 0; i < 640; i++){
+    t = t + dt;
+    r1.th  = sc.sin_th1(t);
+    r1.thv = sc.sin_th1v(t);
+    r1.tha = sc.sin_th1a(t);
+    r2.th  = sc.sin_th1(t);
+    r2.thv = sc.sin_th1v(t);
+    r2.tha = sc.sin_th1a(t);    
+    En_revo(r1, r2);
+
+    ofs1 << setw(16) << t     
+	 << setw(16) << r1.th  << setw(16) << r1.thv
+	 << setw(16) << r1.tha << setw(16) << tau_1
+	 << setw(16) << r2.th  << setw(16) << r2.thv
+	 << setw(16) << r2.tha << setw(16) << tau_2
+	 << endl;
+
+    ofs2 << setw(16) << t    
+	 << setw(16) << Ene_1 << setw(16) << ev1  
+	 << setw(16) << ia1   << setw(16) << tau_1
+	 << endl;
+
+    ofs3 << setw(16) << t    
+	 << setw(16) << Ene_2 << setw(16) << ev2  
+	 << setw(16) << ia2   << setw(16) << tau_2
+	 << endl;
+
+    ofs4 << setw(16) << t
+	 << setw(16) << b1*r1.thv
+	 << setw(16) << b2*r1.tha
+	 << setw(16) << b3*tau_1
+	 << setw(16) << ev1
+	 << setw(16) << Kv*r1.thv
+	 << endl;
+
+    ofs5 << setw(16) << t
+	 << setw(16) << b1*r2.thv
+	 << setw(16) << b2*r2.tha
+	 << setw(16) << b3*tau_2
+	 << setw(16) << ev2
+	 << setw(16) << Kv*r2.thv
+	 << endl;
+  }
+  
+  return 0;
+}
+
+double En_revo(Manipulator &r1, Manipulator &r2)
+{
+  register double cth1, cth12, cth2;
+  register double sth1, sth12, sth2;  
+
+  //dbg();
+  cth1 = cos(r1.th); cth12 = cos(r1.th + r2.th); cth2 = cos(r2.th);
+  sth1 = sin(r1.th); sth12 = sin(r1.th + r2.th); sth2 = sin(r2.th);
+ 
+  tau_1 = (a1+a2+a3+2.0*a4*cth2)*r1.tha + (a2+a3+a4*cth2)*r2.tha
+    - a4*(2.0*r1.thv*r2.thv + r2.thv*r2.thv)*sth2;
+  tau_2
+    = (a2 + a3 + a4*cth2)*r1.tha + (a2 + a3)*r2.tha + a4*r1.thv*r1.thv*sth2;
+ 
+  ev1 = b1*r1.thv + b2*r1.tha + b3*tau_1; ia1 = (ev1 - Kv*r1.thv)/Ra;
+  ev2 = b1*r2.thv + b2*r2.tha + b3*tau_2; ia2 = (ev2 - Kv*r2.thv)/Ra;
+  if (ev1*ia1 > 0.0){ Ene_1 = Ene_1 + ev1*ia1*dt; }
+  if (ev2*ia2 > 0.0){ Ene_2 = Ene_2 + ev2*ia2*dt; }
+ 
+  //Ene123 = Ene_1 + Ene_2 + Ene_3;
+  Ene_123 = Ene_1 + Ene_2;
+
+  return Ene_123;//Ene123;
+}

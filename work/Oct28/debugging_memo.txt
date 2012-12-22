@@ -1,0 +1,78 @@
+<data 2009/11/2/18:49>
+~Work/study/trunk/vertical/
+
+221   pscv = new Sin_curve( ttf, pini->z  , pfin->z  , 0.0, 0.0);
+
+ttf = ts[DIV] = 0.64
+pini->z = 0.00, pfin->z = 0.0618
+
+
+~/Work/study/trunk/lab/Oct28/main.cpp
+
+ts[8] = 0.64;
+t = 0.47; nt = 560;
+
+12:41
+t = 0.006, 
+t = 0.007, 
+
+電圧・電流の値が変化しない
+e3.energy　の値が一直線
+
+repeat kiza1=  0.0000
+cur=1, ts[cur+2]=0.240000
+cur=2, ts[cur+2]=0.320000
+cur=3, ts[cur+2]=0.400000
+cur=4, ts[cur+2]=0.480000
+
+th_1が波形を描いてしまう。->tansaku()を調べる
+
+th1[0], th1[8]には、仮想マニピュレータの初期角度が入っている
+{
+->r3軸用の初期座標を代入
+->thの数を増やす{直動(上昇)、並列、直動(下降)}
+->
+}
+
+~/デスクトップ/dp-4-282.c
+213:	  for(nt = 1; nt <= (int)(ts[3]/dt); nt++){
+237:	for(nt=1; nt <= (int)(ts[4]/dt); nt++){
+262:	  for(nt = 1; nt <= (int)(ts[5]/dt); nt++){
+288:	for(nt = 1; nt <= (int)(ts[8]/dt); nt++){
+318:  for(nt = 1; nt <= (int)(ts[8]/dt)+1600; nt++){
+487:  for(nt=1; nt<=(int)(ts[8]/dt); nt++){
+
+86:  dt = 0.001; g = 9.8;
+212:	  t     = 0.0;
+236:	t = 0.0;
+261:	  t = 0.0;
+287:	t = 0.0;
+315:  t = 0.0;
+486:  t=0.0;
+
+</data>
+
+2009/11/3/
+dp-4-28.c
+En()::L505
+when nt = 1.0 then Ene12 = 0.0
+t (nt)　は、 En()を呼び出す前の値に依存
+En（）を呼び出す前に、Ene12を初期化しておきたい
+
+En()で必要なデータの構造胎を返せばいい？
+
+En()で必要なデータを構造胎にパックして返す
+
+Ene12の初期化
+
+e3をどこで初期化するか。
+
+t = 0.0のときに、En()が呼び出されたときのみEne12や(z,zv,za)の初期化を行いたい。
+
+
+Oct28/main.cpp
+L619{// simulation one term }
+でのブロックを関数化。
+En（）のモジュールの分割がおかしい。
+En()は、sinc()からも呼び出される
+

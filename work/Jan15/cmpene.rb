@@ -1,0 +1,220 @@
+#!/usr/bin/ruby
+
+# Keep it simple stupid.
+
+require 'rubygems'
+require 'gnuplot'
+
+$odir   = "dir-zcurve/pderiv"
+$idir   = "dir-etc"
+$prefix = "zcurve"
+
+# input file data
+a_flag = [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] # Animation number
+file_st  = [#["%s/%s_sinc_st.dat"          , []     ],
+            ["%s/%s_r1_sinc_st.dat"        , []     ],
+            ["%s/%s_r2_sinc_st.dat"        , []     ],
+            ["%s/%s_r3_sinc_st.dat"        , []     ],
+            #["%s/%s_saiteki_st_%05d.dat"  , a_flag ],
+            ["%s/%s_r1_saiteki_st_%05d.dat", a_flag ],
+            ["%s/%s_r2_saiteki_st_%05d.dat", a_flag ],
+            ["%s/%s_r3_saiteki_st_%05d.dat", a_flag ],   ]
+file_ev  = [#["%s/%s_sinc_ev.dat"          , []     ],
+            ["%s/%s_r1_sinc_ev.dat"        , []     ],
+            ["%s/%s_r2_sinc_ev.dat"        , []     ],
+            ["%s/%s_r3_sinc_ev.dat"        , []     ],
+            #["%s/%s_saiteki_ev_%05d.dat"  , a_flag ],
+            ["%s/%s_r1_saiteki_ev_%05d.dat", a_flag ],
+            ["%s/%s_r2_saiteki_ev_%05d.dat", a_flag ],
+            ["%s/%s_r3_saiteki_ev_%05d.dat", a_flag ],   ]
+file_ee  = [["%s/%s_sinc_endeffector.dat"        , []    ],
+            ["%s/%s_saiteki_endeffector_%05d.dat", a_flag],]
+file_etc = [["%s/%s_enemin2.dat"                 , []    ],
+            ["%s/%s_energy_sinc.dat"             , []    ],
+            ["%s/%s_energy_saiteki_%05d.dat"     , a_flag],]
+
+pdata = []
+file_st.each do |ftemp, nums|
+  if nums.empty?
+    #pdata += [ sprintf(ftemp, $idir, $prefix) ]
+    pdata += nums.collect{|num| sprintf(ftemp, $idir, $prefix) }
+  elsif
+    #nums.each{|num| pdata += [ sprintf(ftemp, $idir, $prefix, num) ] }
+    pdata += nums.collect{|num| sprintf(ftemp, $idir, $prefix, num)}
+  end
+end
+
+# constituent  t, ev, term1, term2, term3
+# standrad     t,  z, zv   , za   , ev   , ia, tau , energy, ev_ia
+$options = {
+  # constituent
+  "t_ev"     => {"opt"=>"u 1:2 w l", "ylabel" => "[volt]"  },
+  "t_b1-tha" => {"opt"=>"u 1:3 w l", "ylabel" => "b1[volt]"},
+  "t_b2-thv" => {"opt"=>"u 1:4 w l", "ylabel" => "b2[volt]"},
+  "t_b3-tau" => {"opt"=>"u 1:5 w l", "ylabel" => "b3[volt]"},
+  # standard
+  "t_z"      => {"opt"=>"u 1:2 w l", "ylabel" => "z[m]"       },
+  "t_zv"     => {"opt"=>"u 1:3 w l", "ylabel" => "zv[m/sec]"  },
+  "t_za"     => {"opt"=>"u 1:4 w l", "ylabel" => "za[m/sec^2]"},
+  "t_ev"     => {"opt"=>"u 1:5 w l", "ylabel" => "ev[volt]"   },
+  "t_ia"     => {"opt"=>"u 1:6 w l", "ylabel" => "ia[amp]"    },
+  "t_tau"    => {"opt"=>"u 1:7 w l", "ylabel" => "[Nm]"       },
+  "t_energy" => {"opt"=>"u 1:8 w l", "ylabel" => "[J]"        },
+  "t_evia"   => {"opt"=>"u 1:9 w l", "ylabel" => "[watt]"     },
+  # enemin2
+  "n_enemin2" => {"opt"=>"u 1:2 w l", "ylabel" => "[J]"},
+  "n_r1"      => {"opt"=>"u 1:3 w l", "ylabel" => "[J]"},
+  "n_r2"      => {"opt"=>"u 1:4 w l", "ylabel" => "[J]"},
+  "n_r3"      => {"opt"=>"u 1:5 w l", "ylabel" => "[J]"},
+  #
+  
+}
+
+# draw graph
+def draw_const(gp, fname, which)
+  opt    = $options[which]['opt']
+  ylabel = $options[which]['ylabel']
+  
+  base = fname.gsub(/#{$idir}/,"").gsub(/\.dat$/,"")
+  if base =~ /(\d+)/
+    num = $1
+  else
+    num = "sinc"
+  end
+  
+  ofname = "#{$odir}/#{base}_#{which}.gif"
+  # ["set xtics 0.02"         ,
+  #  "set ytics 0.01"         ,
+  #  "set xrange [-0.06:0.06]",
+  #  "set yrange [ 0.00:0.14]",
+  #  "set view 67.0, 340"     ,
+  ["set terminal gif"      ,
+   "set output '#{ofname}'",
+   "set xlabel '[sec]'"    ,
+   "set ylabel '#{ylabel}'",
+   "plot '#{fname}' #{opt} title '#{num}'"
+   #"splot '#{fname}' #{opt} title '#{num}'"
+  ].each{|cmd| gp.puts(cmd) }
+end
+
+def draw_const_cmp(gp, fnames, nums, which)
+  opt    = $options[which]['opt']
+  ylabel = $options[which]['ylabel']
+  
+  base = fnames[0].gsub(/#{$idir}/,"").gsub(/\.dat$/,"")
+  if base =~ /(\d+)/
+    num = $1
+  else
+    num = "sinc"
+  end
+  
+  ofname  = "#{$odir}/#{base}_#{which}.gif"
+  sendcmd = nums.collect{|num|
+    "'#{fnames[num]}' #{opt} title '#{num}'"
+  }.join(',')
+  
+  ["set output '#{ofname}'",
+   "set xlabel '[sec]'"    ,
+   "set ylabel '#{ylabel}'",
+   "plot #{sendcmd}"       ,
+  ].each{|cmd| gp.puts(cmd) }
+end
+############################################################
+def draw_standard(gp, fname, which)
+  opt    = $options[which]['opt']
+  ylabel = $options[which]['ylabel']
+  
+  base = fname.gsub(/#{$idir}/,"").gsub(/\.dat$/,"")
+  if base =~ /(\d+)/
+    num = $1
+  else
+    num = "sinc"
+  end
+  
+  ofname = "#{$odir}/#{base}_#{which}.gif"
+  # ["set xtics 0.02"         ,
+  #  "set ytics 0.01"         ,
+  #  "set xrange [-0.06:0.06]",
+  #  "set yrange [ 0.00:0.14]",
+  #  "set view 67.0, 340"     ,
+  ["set terminal gif"      ,
+   "set output '#{ofname}'",
+   "set xlabel '[sec]'"    ,
+   "set ylabel '#{ylabel}'",
+   "plot '#{fname}' #{opt} title '#{num}'"
+   #"splot '#{fname}' #{opt} title '#{num}'"
+  ].each{|cmd| gp.puts(cmd) }
+end
+
+def draw_standard_cmp(gp, fnames, nums, which)
+  opt    = $options[which]['opt']
+  ylabel = $options[which]['ylabel']
+  
+  base = fnames[0].gsub(/#{$idir}/,"").gsub(/\.dat$/,"")
+  if base =~ /(\d+)/
+    num = $1
+  else
+    num = "sinc"
+  end
+  ofname  = "#{$odir}/#{base}_#{which}.gif"
+  sendcmd = nums.collect{|num|
+    "'#{fnames[num]}' #{opt} title '#{num}'"
+  }.join(',')
+  
+  ["set output '#{ofname}'",
+   "set xlabel '[sec]'"    ,
+   "set ylabel '#{ylabel}'",
+   "plot #{sendcmd}"       ,
+  ].each{|cmd| gp.puts(cmd) }
+end
+
+
+def draw_enemin2(gp, fname, which)  
+  opt     = $options[which]['opt']
+  ylabel  = $options[which]['ylabel']
+  base    = fname.gsub(/#{$idir}/,"").gsub(/\.dat$/,"")
+  
+  ofname  = "#{$odir}/#{base}_#{which}.gif"
+  sendcmd = "'#{fname}' #{opt} title '#{which}'"
+  
+  ["set output '#{ofname}'",
+   "set xlabel '[sec]'"    ,
+   "set ylabel '#{ylabel}'",
+   "plot #{sendcmd}"       ,
+  ].each{|cmd| gp.puts(cmd) }
+end
+
+def draw_enemin2_cmp(gp, fname, whiches)
+  ylabel  = "[J]"
+  #$options[which]['ylabel']
+  base    = fname.gsub(/#{$idir}/,"").gsub(/\.dat$/,"")
+  ofname  = "#{$odir}/#{base}_cmp.gif"
+  
+  sendcmd = whiches.collect{|which|
+    "'#{fname}' #{$options[which]['opt']} title '#{which}'"
+  }.join(",")
+  
+  ["set output '#{ofname}'",
+   "set xlabel '[sec]'"    ,
+   "set ylabel '#{ylabel}'",
+   "plot #{sendcmd}"       ,
+  ].each{|cmd| gp.puts(cmd) }
+end
+
+
+
+Gnuplot.open{|gp|
+  ["set grid",
+   "set size 0.6, 0.6",
+   "set terminal gif",].each{|cmd| gp.puts(cmd) }
+  # one line
+  ["n_enemin2", "n_r1", "n_r2", "n_r3"].each{|which|
+    draw_enemin2(gp, "dir-etc/zcurve_enemin2.dat", which)
+  }
+  
+  draw_enemin2_cmp(gp, "dir-etc/zcurve_enemin2.dat",
+                   ["n_enemin2", "n_r1", "n_r2", "n_r3"])
+
+  
+  gp.puts "pause 1.8"
+}
